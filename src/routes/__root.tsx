@@ -72,14 +72,43 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      // Default title/description — individual routes override these
+      { title: "Hungarian Method Solver — Assignment Problem" },
+      {
+        name: "description",
+        content:
+          "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
+      },
+      // Open Graph
+      { property: "og:title", content: "Hungarian Method Solver — Assignment Problem" },
+      {
+        property: "og:description",
+        content:
+          "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { property: "og:url", content: "https://hungarian.gamerjagdish.com" },
+      {
+        property: "og:image",
+        content: "https://hungarian.gamerjagdish.com/og-image.png",
+      },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Hungarian Method Solver — step-by-step assignment problem solver" },
+      { property: "og:site_name", content: "Hungarian Method Solver" },
+      // Twitter / X Card
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Hungarian Method Solver — Assignment Problem" },
+      {
+        name: "twitter:description",
+        content:
+          "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
+      },
+      {
+        name: "twitter:image",
+        content: "https://hungarian.gamerjagdish.com/og-image.png",
+      },
+      { name: "twitter:image:alt", content: "Hungarian Method Solver — step-by-step assignment problem solver" },
     ],
     links: [
       {

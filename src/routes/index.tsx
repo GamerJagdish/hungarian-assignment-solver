@@ -11,6 +11,19 @@ export const Route = createFileRoute("/")({
         content:
           "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
       },
+      // Override OG title for the index page
+      { property: "og:title", content: "Hungarian Method Solver — Assignment Problem (Minimization)" },
+      {
+        property: "og:description",
+        content:
+          "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
+      },
+      { name: "twitter:title", content: "Hungarian Method Solver — Assignment Problem (Minimization)" },
+      {
+        name: "twitter:description",
+        content:
+          "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
+      },
     ],
   }),
   component: Index,
