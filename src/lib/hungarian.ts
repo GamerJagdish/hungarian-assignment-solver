@@ -1,5 +1,6 @@
 // Hungarian algorithm for minimization with step-by-step trace.
-// Handles non-square matrices by padding with zeros (large constant for max-cost dummies isn't needed for minimization with 0 padding when interpreted as "no task" — but we use max+1 to avoid dummies being preferred).
+// Handles non-square matrices by padding with zeros (dummy rows/cols represent
+// "no assignment" and carry zero cost, which is the standard convention).
 
 export type Step = {
   title: string;
@@ -25,10 +26,9 @@ export function solveHungarian(input: number[][]): Solution {
   const n = Math.max(originalRows, originalCols);
   const steps: Step[] = [];
 
-  // Pad to square with a large value so dummies aren't preferred.
-  let maxVal = 0;
-  for (const row of input) for (const v of row) if (v > maxVal) maxVal = v;
-  const PAD = maxVal + 1;
+  // Pad to square with 0 — dummy rows/cols represent unassigned slots and
+  // carry no real cost. This is the standard convention for the Hungarian method.
+  const PAD = 0;
 
   const m: number[][] = [];
   for (let i = 0; i < n; i++) {
@@ -43,7 +43,7 @@ export function solveHungarian(input: number[][]): Solution {
   if (originalRows !== originalCols) {
     steps.push({
       title: "Balance the matrix",
-      description: `Matrix is ${originalRows}×${originalCols}. Padded to ${n}×${n} with dummy values (${PAD}) so it becomes square.`,
+      description: `Matrix is ${originalRows}×${originalCols}. Padded to ${n}×${n} with dummy values (0) so it becomes square. Dummy rows/columns represent unassigned slots and carry zero cost.`,
       matrix: clone(m),
     });
   } else {

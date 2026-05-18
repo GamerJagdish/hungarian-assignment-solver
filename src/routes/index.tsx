@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { solveHungarian, type Solution } from "@/lib/hungarian";
 
 export const Route = createFileRoute("/")({
@@ -36,6 +36,38 @@ function Index() {
   const [solution, setSolution] = useState<Solution | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  // ── Dark mode ──────────────────────────────────────────────────────────────
+  const [dark, setDark] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
+    const stored = localStorage.getItem("theme");
+    if (stored) return stored === "dark";
+    return window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (dark) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [dark]);
+
+  // ── Copy matrix ────────────────────────────────────────────────────────────
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = useCallback(() => {
+    const text = matrix
+      .map((row) => row.map((v) => (v === "" ? "0" : v)).join(" "))
+      .join("\n");
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    });
+  }, [matrix]);
+
   const rowLabels = useMemo(
     () => Array.from({ length: rows }, (_, i) => String.fromCharCode(65 + i)),
     [rows],
@@ -62,6 +94,27 @@ function Index() {
     const next = matrix.map((row) => [...row]);
     next[i][j] = v;
     setMatrix(next);
+  };
+
+  // Parse a paste payload into numbers and fill the matrix starting at (startRow, startCol).
+  const handlePaste = (startRow: number, startCol: number, e: React.ClipboardEvent) => {
+    const text = e.clipboardData.getData("text");
+    // Split on any whitespace (spaces, tabs, newlines) and filter empty strings.
+    const tokens = text.trim().split(/\s+/).filter(Boolean);
+    // Only proceed if there are multiple tokens — single token means normal paste into one cell.
+    if (tokens.length <= 1) return;
+    e.preventDefault();
+    const next = matrix.map((row) => [...row]);
+    let pos = startRow * cols + startCol;
+    for (const token of tokens) {
+      const r = Math.floor(pos / cols);
+      const c = pos % cols;
+      if (r >= rows) break;
+      next[r][c] = token;
+      pos++;
+    }
+    setMatrix(next);
+    setSolution(null);
   };
 
   const handleSolve = () => {
@@ -118,16 +171,40 @@ function Index() {
     <main className="min-h-screen bg-background text-foreground">
       <div className="mx-auto max-w-5xl px-4 py-10 sm:py-14">
         <header className="mb-10">
-          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
-            Operations Research
-          </p>
-          <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
-            Hungarian Method Solver
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
-            Enter your cost matrix for an assignment problem (minimization). The solver walks
-            through each step of the Hungarian algorithm and gives the optimal assignment.
-          </p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">
+                Operations Research
+              </p>
+              <h1 className="mt-2 text-3xl font-semibold tracking-tight sm:text-4xl">
+                Hungarian Method Solver
+              </h1>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
+                Enter your cost matrix for an assignment problem (minimization). The solver walks
+                through each step of the Hungarian algorithm and gives the optimal assignment.
+              </p>
+            </div>
+            {/* Dark mode toggle */}
+            <button
+              type="button"
+              onClick={() => setDark((d) => !d)}
+              aria-label={dark ? "Switch to light mode" : "Switch to dark mode"}
+              className="mt-1 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-input bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+            >
+              {dark ? (
+                // Sun icon
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="4"/>
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                </svg>
+              ) : (
+                // Moon icon
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+              )}
+            </button>
+          </div>
         </header>
 
         <section aria-labelledby="setup-heading" className="mb-6">
@@ -183,6 +260,13 @@ function Index() {
             >
               Clear
             </button>
+            <button
+              type="button"
+              onClick={handleCopy}
+              className="h-10 rounded-md border border-input bg-background px-4 text-sm font-medium transition-colors hover:bg-accent focus:outline-none focus:ring-2 focus:ring-ring"
+            >
+              {copied ? "Copied!" : "Copy matrix"}
+            </button>
           </div>
         </section>
 
@@ -190,6 +274,9 @@ function Index() {
           <h2 id="matrix-heading" className="mb-3 text-sm font-medium text-muted-foreground">
             Cost matrix
           </h2>
+          <p className="mb-3 text-xs text-muted-foreground">
+            Tip: paste space-separated numbers into any cell to auto-fill the matrix left-to-right, row by row.
+          </p>
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full min-w-max border-collapse text-sm">
               <caption className="sr-only">
@@ -231,6 +318,7 @@ function Index() {
                           aria-label={`Cost for job ${rowLabels[i]} and employee ${colLabels[j]}`}
                           value={matrix[i]?.[j] ?? ""}
                           onChange={(e) => setCell(i, j, e.target.value)}
+                          onPaste={(e) => handlePaste(i, j, e)}
                           className="h-11 w-full min-w-[4rem] bg-background px-2 text-center text-sm tabular-nums focus:outline-none focus:ring-2 focus:ring-inset focus:ring-ring sm:min-w-[5rem]"
                         />
                       </td>
@@ -289,16 +377,18 @@ function Index() {
             <div className="rounded-lg border border-border bg-muted/40 p-5">
               <h3 className="text-base font-semibold">Optimal assignment</h3>
               <ul className="mt-3 space-y-1.5 text-sm">
-                {solution.assignment
-                  .filter((a) => !a.isDummy)
-                  .map((a) => (
+                {solution.assignment.map((a) => {
+                  const rowLabel = String.fromCharCode(65 + a.row);
+                  const colLabel = toRoman(a.col + 1);
+                  return (
                     <li key={a.row} className="tabular-nums">
                       <span className="font-medium">
-                        {String.fromCharCode(65 + a.row)} → {toRoman(a.col + 1)}
+                        {rowLabel} → {colLabel}
                       </span>
                       <span className="text-muted-foreground"> · cost {a.cost}</span>
                     </li>
-                  ))}
+                  );
+                })}
               </ul>
               <p className="mt-4 text-sm">
                 <span className="font-semibold">Total minimum cost: </span>
