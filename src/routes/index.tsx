@@ -12,13 +12,19 @@ export const Route = createFileRoute("/")({
           "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
       },
       // Override OG title for the index page
-      { property: "og:title", content: "Hungarian Method Solver — Assignment Problem (Minimization)" },
+      {
+        property: "og:title",
+        content: "Hungarian Method Solver — Assignment Problem (Minimization)",
+      },
       {
         property: "og:description",
         content:
           "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
       },
-      { name: "twitter:title", content: "Hungarian Method Solver — Assignment Problem (Minimization)" },
+      {
+        name: "twitter:title",
+        content: "Hungarian Method Solver — Assignment Problem (Minimization)",
+      },
       {
         name: "twitter:description",
         content:
@@ -59,9 +65,7 @@ function Index() {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = useCallback(() => {
-    const text = matrix
-      .map((row) => row.map((v) => (v === "" ? "0" : v)).join(" "))
-      .join("\n");
+    const text = matrix.map((row) => row.map((v) => (v === "" ? "0" : v)).join(" ")).join("\n");
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
@@ -72,10 +76,7 @@ function Index() {
     () => Array.from({ length: rows }, (_, i) => String.fromCharCode(65 + i)),
     [rows],
   );
-  const colLabels = useMemo(
-    () => Array.from({ length: cols }, (_, i) => toRoman(i + 1)),
-    [cols],
-  );
+  const colLabels = useMemo(() => Array.from({ length: cols }, (_, i) => toRoman(i + 1)), [cols]);
 
   const resize = (r: number, c: number) => {
     const next = makeEmpty(r, c);
@@ -193,14 +194,36 @@ function Index() {
             >
               {dark ? (
                 // Sun icon
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4"/>
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="4" />
+                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41" />
                 </svg>
               ) : (
                 // Moon icon
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z" />
                 </svg>
               )}
             </button>
@@ -275,7 +298,8 @@ function Index() {
             Cost matrix
           </h2>
           <p className="mb-3 text-xs text-muted-foreground">
-            Tip: paste space-separated numbers into any cell to auto-fill the matrix left-to-right, row by row.
+            Tip: paste space-separated numbers into any cell to auto-fill the matrix left-to-right,
+            row by row.
           </p>
           <div className="overflow-x-auto rounded-lg border border-border">
             <table className="w-full min-w-max border-collapse text-sm">

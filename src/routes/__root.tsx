@@ -94,7 +94,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "Hungarian Method Solver — step-by-step assignment problem solver" },
+      {
+        property: "og:image:alt",
+        content: "Hungarian Method Solver — step-by-step assignment problem solver",
+      },
       { property: "og:site_name", content: "Hungarian Method Solver" },
       // Twitter / X Card
       { name: "twitter:card", content: "summary_large_image" },
@@ -108,7 +111,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         name: "twitter:image",
         content: "https://hungarian.gamerjagdish.com/og-image.png",
       },
-      { name: "twitter:image:alt", content: "Hungarian Method Solver — step-by-step assignment problem solver" },
+      {
+        name: "twitter:image:alt",
+        content: "Hungarian Method Solver — step-by-step assignment problem solver",
+      },
     ],
     links: [
       {

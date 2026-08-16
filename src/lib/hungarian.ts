@@ -61,7 +61,8 @@ export function solveHungarian(input: number[][]): Solution {
   }
   steps.push({
     title: "Step 1 — Row reduction",
-    description: "Subtract the smallest element of each row from every element in that row. Each row now contains at least one zero.",
+    description:
+      "Subtract the smallest element of each row from every element in that row. Each row now contains at least one zero.",
     matrix: clone(m),
   });
 
@@ -73,7 +74,8 @@ export function solveHungarian(input: number[][]): Solution {
   }
   steps.push({
     title: "Step 2 — Column reduction",
-    description: "Subtract the smallest element of each column from every element in that column. Each column now also contains at least one zero.",
+    description:
+      "Subtract the smallest element of each column from every element in that column. Each column now also contains at least one zero.",
     matrix: clone(m),
   });
 
@@ -152,7 +154,9 @@ function coverZeros(m: number[][]): { rowCover: number[]; colCover: number[]; li
   const colAssign = new Array(n).fill(-1);
   const zerosInRow = m.map((row) => row.reduce((a, v) => a + (v === 0 ? 1 : 0), 0));
   // Try rows with fewest zeros first for better marking
-  const order = Array.from({ length: n }, (_, i) => i).sort((a, b) => zerosInRow[a] - zerosInRow[b]);
+  const order = Array.from({ length: n }, (_, i) => i).sort(
+    (a, b) => zerosInRow[a] - zerosInRow[b],
+  );
   for (const i of order) {
     for (let j = 0; j < n; j++) {
       if (m[i][j] === 0 && colAssign[j] === -1) {
