@@ -1,6 +1,6 @@
 # Hungarian Method Solver
 
-Step-by-step solver for assignment problems (minimization) using the Hungarian algorithm. Built with TanStack Start, React 19, Tailwind CSS v4, and Vite.
+Step-by-step solver for assignment problems (minimization) using the Hungarian algorithm. Built with React 19, TypeScript, Tailwind CSS v4, and Vite.
 
 ## Getting Started
 
@@ -26,7 +26,4 @@ bun run build
 
 # Preview production build
 bun run preview
-
-# Deploy to Cloudflare Workers
-bun x wrangler deploy
 ```

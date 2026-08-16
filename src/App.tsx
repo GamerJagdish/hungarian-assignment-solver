@@ -1,41 +1,7 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState, useEffect, useCallback } from "react";
 import { solveHungarian, type Solution } from "@/lib/hungarian";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Hungarian Method Solver — Assignment Problem (Minimization)" },
-      {
-        name: "description",
-        content:
-          "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
-      },
-      // Override OG title for the index page
-      {
-        property: "og:title",
-        content: "Hungarian Method Solver — Assignment Problem (Minimization)",
-      },
-      {
-        property: "og:description",
-        content:
-          "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
-      },
-      {
-        name: "twitter:title",
-        content: "Hungarian Method Solver — Assignment Problem (Minimization)",
-      },
-      {
-        name: "twitter:description",
-        content:
-          "Solve assignment problems for minimization step-by-step using the Hungarian method. Enter your cost matrix and get a detailed solution.",
-      },
-    ],
-  }),
-  component: Index,
-});
-
-function Index() {
+export default function App() {
   const [rows, setRows] = useState(5);
   const [cols, setCols] = useState(5);
   const [matrix, setMatrix] = useState<string[][]>(() => makeEmpty(5, 5));
@@ -452,7 +418,7 @@ function MatrixView({
                   className={[
                     "h-10 min-w-[2.5rem] border border-border px-3 text-center",
                     cellHi
-                      ? "bg-primary text-primary-foreground font-semibold"
+                      ? "bg-primary font-semibold text-primary-foreground"
                       : lineHi
                         ? "bg-accent"
                         : v === 0
