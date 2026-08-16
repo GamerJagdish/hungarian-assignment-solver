@@ -1,5 +1,7 @@
 {
   "name": "hungarian-assignment-solver",
+  "description": "Interactive, step-by-step Hungarian Method solver for Assignment Problems in Operations Research.",
+  "license": "MIT",
   "private": true,
   "type": "module",
   "scripts": {

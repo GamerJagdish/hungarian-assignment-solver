@@ -68,7 +68,7 @@ export default function App() {
     const text = e.clipboardData.getData("text");
     // Split on any whitespace (spaces, tabs, newlines) and filter empty strings.
     const tokens = text.trim().split(/\s+/).filter(Boolean);
-    // Only proceed if there are multiple tokens — single token means normal paste into one cell.
+    // Only proceed if there are multiple tokens - single token means normal paste into one cell.
     if (tokens.length <= 1) return;
     e.preventDefault();
     const next = matrix.map((row) => [...row]);

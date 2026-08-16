@@ -26,7 +26,7 @@ export function solveHungarian(input: number[][]): Solution {
   const n = Math.max(originalRows, originalCols);
   const steps: Step[] = [];
 
-  // Pad to square with 0 — dummy rows/cols represent unassigned slots and
+  // Pad to square with 0 - dummy rows/cols represent unassigned slots and
   // carry no real cost. This is the standard convention for the Hungarian method.
   const PAD = 0;
 
@@ -60,7 +60,7 @@ export function solveHungarian(input: number[][]): Solution {
     if (min > 0) for (let j = 0; j < n; j++) m[i][j] -= min;
   }
   steps.push({
-    title: "Step 1 — Row reduction",
+    title: "Step 1 - Row reduction",
     description:
       "Subtract the smallest element of each row from every element in that row. Each row now contains at least one zero.",
     matrix: clone(m),
@@ -73,7 +73,7 @@ export function solveHungarian(input: number[][]): Solution {
     if (min > 0) for (let i = 0; i < n; i++) m[i][j] -= min;
   }
   steps.push({
-    title: "Step 2 — Column reduction",
+    title: "Step 2 - Column reduction",
     description:
       "Subtract the smallest element of each column from every element in that column. Each column now also contains at least one zero.",
     matrix: clone(m),
@@ -85,7 +85,7 @@ export function solveHungarian(input: number[][]): Solution {
     const { rowCover, colCover, lines } = coverZeros(m);
     if (lines >= n) {
       steps.push({
-        title: `Step ${2 + iter} — Optimal assignment reachable`,
+        title: `Step ${2 + iter} - Optimal assignment reachable`,
         description: `Minimum number of lines to cover all zeros = ${lines}, which equals matrix size ${n}. An optimal assignment exists.`,
         matrix: clone(m),
         highlight: { rows: rowCover, cols: colCover },
@@ -102,7 +102,7 @@ export function solveHungarian(input: number[][]): Solution {
       }
     }
     steps.push({
-      title: `Step ${2 + iter} — Cover zeros`,
+      title: `Step ${2 + iter} - Cover zeros`,
       description: `Cover all zeros using ${lines} lines (rows: ${rowCover.length ? rowCover.map((r) => r + 1).join(", ") : "none"}; cols: ${colCover.length ? colCover.map((c) => c + 1).join(", ") : "none"}). Lines < ${n}, so adjust: subtract ${minUncovered} from uncovered elements and add it to doubly-covered elements.`,
       matrix: clone(m),
       highlight: { rows: rowCover, cols: colCover },
