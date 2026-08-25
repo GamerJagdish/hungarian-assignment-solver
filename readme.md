@@ -9,7 +9,6 @@ An interactive, step-by-step solver for linear assignment problems (minimization
 [![Bun](https://img.shields.io/badge/Bun-1.4-FBF0DF?logo=bun&logoColor=black)](https://bun.sh/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
----
 
 ## Why?
 
@@ -30,7 +29,6 @@ My friend was doing Hungarian problems and needed a method to quickly double che
 - **One-Click Actions** - Load preset example matrices, clear all inputs, or copy formatted matrix data to the clipboard.
 - **Responsive & Accessible** - Clean, modern interface designed with semantic HTML and accessible controls.
 
----
 
 ## How It Works
 
@@ -44,7 +42,6 @@ The **Hungarian Method** (also known as the Munkres algorithm or Kuhn–Munkres 
    - If fewer lines are needed, find the smallest uncovered element, subtract it from all uncovered elements, and add it to elements at line intersections. Repeat Step 3.
 5. **Optimal Assignment**: Assign jobs to employees uniquely such that the sum of costs is minimized.
 
----
 
 ## Getting Started
 
@@ -80,7 +77,6 @@ bun --version
 
 4. Open [http://localhost:5173](http://localhost:5173) in your browser.
 
----
 
 ## Available Scripts
 
@@ -92,7 +88,6 @@ bun --version
 | `bun run lint`    | Runs ESLint to check code quality and rules                               |
 | `bun run format`  | Formats all code files using Prettier                                     |
 
----
 
 ## Project Structure
 
@@ -115,7 +110,6 @@ assignment-solver/
 └── LICENSE               # MIT License
 ```
 
----
 
 ## Contributing
 
@@ -127,7 +121,6 @@ Contributions, issues, and feature requests are welcome:
 4. Push to the branch (`git push origin feature/amazing-feature`).
 5. Open a Pull Request.
 
----
 
 ## License
 
