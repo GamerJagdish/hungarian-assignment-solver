@@ -18,6 +18,9 @@ export type Solution = {
   originalCols: number;
 };
 
+const EPS = 1e-9;
+const isZero = (v: number) => Math.abs(v) < EPS;
+const cleanNum = (v: number) => (Math.abs(v) < EPS ? 0 : Math.round(v * 1e9) / 1e9);
 const clone = (m: number[][]) => m.map((r) => [...r]);
 
 export function solveHungarian(input: number[][]): Solution {
@@ -34,7 +37,7 @@ export function solveHungarian(input: number[][]): Solution {
   for (let i = 0; i < n; i++) {
     const row: number[] = [];
     for (let j = 0; j < n; j++) {
-      if (i < originalRows && j < originalCols) row.push(input[i][j]);
+      if (i < originalRows && j < originalCols) row.push(cleanNum(input[i][j]));
       else row.push(PAD);
     }
     m.push(row);
@@ -57,7 +60,9 @@ export function solveHungarian(input: number[][]): Solution {
   // Step 1: Row reduction
   for (let i = 0; i < n; i++) {
     const min = Math.min(...m[i]);
-    if (min > 0) for (let j = 0; j < n; j++) m[i][j] -= min;
+    if (min > 0) {
+      for (let j = 0; j < n; j++) m[i][j] = cleanNum(m[i][j] - min);
+    }
   }
   steps.push({
     title: "Step 1 - Row reduction",
@@ -70,7 +75,9 @@ export function solveHungarian(input: number[][]): Solution {
   for (let j = 0; j < n; j++) {
     let min = Infinity;
     for (let i = 0; i < n; i++) if (m[i][j] < min) min = m[i][j];
-    if (min > 0) for (let i = 0; i < n; i++) m[i][j] -= min;
+    if (min > 0) {
+      for (let i = 0; i < n; i++) m[i][j] = cleanNum(m[i][j] - min);
+    }
   }
   steps.push({
     title: "Step 2 - Column reduction",
@@ -103,7 +110,7 @@ export function solveHungarian(input: number[][]): Solution {
     }
     steps.push({
       title: `Step ${2 + iter} - Cover zeros`,
-      description: `Cover all zeros using ${lines} lines (rows: ${rowCover.length ? rowCover.map((r) => r + 1).join(", ") : "none"}; cols: ${colCover.length ? colCover.map((c) => c + 1).join(", ") : "none"}). Lines < ${n}, so adjust: subtract ${minUncovered} from uncovered elements and add it to doubly-covered elements.`,
+      description: `Cover all zeros using ${lines} line${lines === 1 ? "" : "s"} (rows: ${rowCover.length ? rowCover.map((r) => r + 1).join(", ") : "none"}; cols: ${colCover.length ? colCover.map((c) => c + 1).join(", ") : "none"}). Lines < ${n}, so adjust: subtract ${minUncovered} from uncovered elements and add it to doubly-covered elements.`,
       matrix: clone(m),
       highlight: { rows: rowCover, cols: colCover },
     });
@@ -111,13 +118,13 @@ export function solveHungarian(input: number[][]): Solution {
       for (let j = 0; j < n; j++) {
         const rc = rowCover.includes(i);
         const cc = colCover.includes(j);
-        if (!rc && !cc) m[i][j] -= minUncovered;
-        else if (rc && cc) m[i][j] += minUncovered;
+        if (!rc && !cc) m[i][j] = cleanNum(m[i][j] - minUncovered);
+        else if (rc && cc) m[i][j] = cleanNum(m[i][j] + minUncovered);
       }
     }
   }
 
-  // Final assignment via Hungarian augmenting on the reduced 0/non-0 matrix.
+  // Final assignment via augmenting paths on zero entries
   const assignment = findAssignment(m);
   const result: { row: number; col: number; cost: number; isDummy: boolean }[] = [];
   let total = 0;
@@ -125,7 +132,7 @@ export function solveHungarian(input: number[][]): Solution {
     const j = assignment[i];
     const isDummy = i >= originalRows || j >= originalCols;
     const cost = isDummy ? 0 : input[i][j];
-    if (!isDummy) total += cost;
+    if (!isDummy) total = cleanNum(total + cost);
     result.push({ row: i, col: j, cost, isDummy });
   }
 
@@ -146,37 +153,31 @@ export function solveHungarian(input: number[][]): Solution {
   };
 }
 
-// Cover all zeros with minimum number of horizontal/vertical lines.
+// Cover all zeros with minimum number of horizontal/vertical lines using König's theorem.
 function coverZeros(m: number[][]): { rowCover: number[]; colCover: number[]; lines: number } {
   const n = m.length;
-  // Greedy assignment of zeros
-  const rowAssign = new Array(n).fill(-1);
+  // Maximum bipartite matching on zero entries
+  const rowAssign = findAssignment(m);
   const colAssign = new Array(n).fill(-1);
-  const zerosInRow = m.map((row) => row.reduce((a, v) => a + (v === 0 ? 1 : 0), 0));
-  // Try rows with fewest zeros first for better marking
-  const order = Array.from({ length: n }, (_, i) => i).sort(
-    (a, b) => zerosInRow[a] - zerosInRow[b],
-  );
-  for (const i of order) {
-    for (let j = 0; j < n; j++) {
-      if (m[i][j] === 0 && colAssign[j] === -1) {
-        rowAssign[i] = j;
-        colAssign[j] = i;
-        break;
-      }
+  for (let i = 0; i < n; i++) {
+    if (rowAssign[i] !== -1) {
+      colAssign[rowAssign[i]] = i;
     }
   }
 
   // Mark unassigned rows; from there mark cols having zeros in marked rows; from those cols mark assigned rows.
   const markedRows = new Set<number>();
   const markedCols = new Set<number>();
-  for (let i = 0; i < n; i++) if (rowAssign[i] === -1) markedRows.add(i);
+  for (let i = 0; i < n; i++) {
+    if (rowAssign[i] === -1) markedRows.add(i);
+  }
+
   let changed = true;
   while (changed) {
     changed = false;
     for (const i of markedRows) {
       for (let j = 0; j < n; j++) {
-        if (m[i][j] === 0 && !markedCols.has(j)) {
+        if (isZero(m[i][j]) && !markedCols.has(j)) {
           markedCols.add(j);
           changed = true;
         }
@@ -190,26 +191,28 @@ function coverZeros(m: number[][]): { rowCover: number[]; colCover: number[]; li
       }
     }
   }
+
   // Lines: unmarked rows + marked cols
   const rowCover: number[] = [];
-  for (let i = 0; i < n; i++) if (!markedRows.has(i)) rowCover.push(i);
+  for (let i = 0; i < n; i++) {
+    if (!markedRows.has(i)) rowCover.push(i);
+  }
   const colCover: number[] = Array.from(markedCols).sort((a, b) => a - b);
   return { rowCover, colCover, lines: rowCover.length + colCover.length };
 }
 
-// Find a perfect assignment in a matrix where zeros indicate allowed pairs.
+// Find a maximum bipartite matching in a matrix where zeros indicate allowed edges (Kuhn's algorithm).
 function findAssignment(m: number[][]): number[] {
   const n = m.length;
   const result = new Array(n).fill(-1);
-  const colUsed = new Array(n).fill(false);
 
   const tryAssign = (i: number, visited: boolean[]): boolean => {
     for (let j = 0; j < n; j++) {
-      if (m[i][j] === 0 && !visited[j]) {
+      if (isZero(m[i][j]) && !visited[j]) {
         visited[j] = true;
-        if (result.indexOf(j) === -1 || tryAssign(result.indexOf(j), visited)) {
+        const owner = result.indexOf(j);
+        if (owner === -1 || tryAssign(owner, visited)) {
           result[i] = j;
-          colUsed[j] = true;
           return true;
         }
       }
@@ -217,7 +220,8 @@ function findAssignment(m: number[][]): number[] {
     return false;
   };
 
-  // First pass: rows with single zero
-  for (let i = 0; i < n; i++) tryAssign(i, new Array(n).fill(false));
+  for (let i = 0; i < n; i++) {
+    tryAssign(i, new Array(n).fill(false));
+  }
   return result;
 }

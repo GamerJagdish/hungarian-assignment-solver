@@ -368,8 +368,31 @@ export default function App() {
               <h3 className="text-base font-semibold">Optimal assignment</h3>
               <ul className="mt-3 space-y-1.5 text-sm">
                 {solution.assignment.map((a) => {
+                  const isDummyRow = a.row >= solution.originalRows;
+                  const isDummyCol = a.col >= solution.originalCols;
                   const rowLabel = String.fromCharCode(65 + a.row);
                   const colLabel = toRoman(a.col + 1);
+
+                  if (isDummyRow) {
+                    return (
+                      <li key={a.row} className="tabular-nums text-muted-foreground">
+                        <span className="font-medium">{colLabel}</span> (Employee) →{" "}
+                        <span className="italic">Unassigned</span>
+                        <span> · cost 0</span>
+                      </li>
+                    );
+                  }
+
+                  if (isDummyCol) {
+                    return (
+                      <li key={a.row} className="tabular-nums text-muted-foreground">
+                        <span className="font-medium">{rowLabel}</span> (Job) →{" "}
+                        <span className="italic">Unassigned</span>
+                        <span> · cost 0</span>
+                      </li>
+                    );
+                  }
+
                   return (
                     <li key={a.row} className="tabular-nums">
                       <span className="font-medium">

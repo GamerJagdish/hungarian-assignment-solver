@@ -6,10 +6,13 @@ An interactive, step-by-step solver for linear assignment problems (minimization
 [![TypeScript](https://img.shields.io/badge/TypeScript-6-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Bun](https://img.shields.io/badge/Bun-1.3-FBF0DF?logo=bun&logoColor=black)](https://bun.sh/)
+[![Bun](https://img.shields.io/badge/Bun-1.4-FBF0DF?logo=bun&logoColor=black)](https://bun.sh/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 ---
+
+## Why?
+My friend was doing Hungarian problems and needed a method to quickly double check his answers the AI assistants failed to do it mainly because of their ability to think deeper so they would hallucinate a lot. So I used AI to instead write the algorithm which it does better than solving math issues. It's a vibe coded app made with [Lovable](https://lovable.dev/) and a bit of my personal touch nothing more.
 
 ## Features
 
@@ -58,8 +61,8 @@ bun --version
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/your-username/assignment-solver.git
-   cd assignment-solver
+   git clone https://github.com/GamerJagdish/hungarian-assignment-solver.git
+   cd hungarian-assignment-solver
    ```
 
 2. Install dependencies:
@@ -95,7 +98,8 @@ bun --version
 ```text
 assignment-solver/
 ├── public/               # Static assets & Open Graph images
-│   └── og-image.png
+│   ├── og-image.png
+│   └── robots.txt
 ├── src/
 │   ├── lib/
 │   │   ├── hungarian.ts  # Hungarian algorithm implementation (pure TypeScript)
