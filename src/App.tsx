@@ -370,28 +370,12 @@ export default function App() {
                 {solution.assignment.map((a) => {
                   const isDummyRow = a.row >= solution.originalRows;
                   const isDummyCol = a.col >= solution.originalCols;
-                  const rowLabel = String.fromCharCode(65 + a.row);
-                  const colLabel = toRoman(a.col + 1);
-
-                  if (isDummyRow) {
-                    return (
-                      <li key={a.row} className="tabular-nums text-muted-foreground">
-                        <span className="font-medium">{colLabel}</span> (Employee) →{" "}
-                        <span className="italic">Unassigned</span>
-                        <span> · cost 0</span>
-                      </li>
-                    );
-                  }
-
-                  if (isDummyCol) {
-                    return (
-                      <li key={a.row} className="tabular-nums text-muted-foreground">
-                        <span className="font-medium">{rowLabel}</span> (Job) →{" "}
-                        <span className="italic">Unassigned</span>
-                        <span> · cost 0</span>
-                      </li>
-                    );
-                  }
+                  const rowLabel = isDummyRow
+                    ? `${String.fromCharCode(65 + a.row)} (Dummy)`
+                    : String.fromCharCode(65 + a.row);
+                  const colLabel = isDummyCol
+                    ? `${toRoman(a.col + 1)} (Dummy)`
+                    : toRoman(a.col + 1);
 
                   return (
                     <li key={a.row} className="tabular-nums">

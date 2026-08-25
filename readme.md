@@ -12,6 +12,7 @@ An interactive, step-by-step solver for linear assignment problems (minimization
 ---
 
 ## Why?
+
 My friend was doing Hungarian problems and needed a method to quickly double check his answers the AI assistants failed to do it mainly because of their ability to think deeper so they would hallucinate a lot. So I used AI to instead write the algorithm which it does better than solving math issues. It's a vibe coded app made with [Lovable](https://lovable.dev/) and a bit of my personal touch nothing more.
 
 ## Features
