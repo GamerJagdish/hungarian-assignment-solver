@@ -9,7 +9,6 @@ An interactive, step-by-step solver for linear assignment problems (minimization
 [![Bun](https://img.shields.io/badge/Bun_v1.4-%23000000.svg?style=for-the-badge&logo=bun&logoColor=white)](https://bun.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](LICENSE)
 
-
 ## Why?
 
 My friend was doing Hungarian problems and needed a method to quickly double check his answers the AI assistants failed to do it mainly because of their ability to think deeper so they would hallucinate a lot. So I used AI to instead write the algorithm which it does better than solving math issues. It's a vibe coded app made with [Lovable](https://lovable.dev/) and a bit of my personal touch nothing more.
@@ -29,7 +28,6 @@ My friend was doing Hungarian problems and needed a method to quickly double che
 - **One-Click Actions** - Load preset example matrices, clear all inputs, or copy formatted matrix data to the clipboard.
 - **Responsive & Accessible** - Clean, modern interface designed with semantic HTML and accessible controls.
 
-
 ## How It Works
 
 The **Hungarian Method** (also known as the Munkres algorithm or Kuhn–Munkres algorithm) is a combinatorial optimization algorithm that solves the assignment problem in polynomial time:
@@ -41,7 +39,6 @@ The **Hungarian Method** (also known as the Munkres algorithm or Kuhn–Munkres 
    - If the number of lines equals $N$ (the size of the matrix), an optimal assignment is possible.
    - If fewer lines are needed, find the smallest uncovered element, subtract it from all uncovered elements, and add it to elements at line intersections. Repeat Step 3.
 5. **Optimal Assignment**: Assign jobs to employees uniquely such that the sum of costs is minimized.
-
 
 ## Getting Started
 
@@ -77,7 +74,6 @@ bun --version
 
 4. Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-
 ## Available Scripts
 
 | Command           | Description                                                               |
@@ -87,7 +83,6 @@ bun --version
 | `bun run preview` | Locally previews the production build                                     |
 | `bun run lint`    | Runs ESLint to check code quality and rules                               |
 | `bun run format`  | Formats all code files using Prettier                                     |
-
 
 ## Project Structure
 
@@ -110,7 +105,6 @@ assignment-solver/
 └── LICENSE               # MIT License
 ```
 
-
 ## Contributing
 
 Contributions, issues, and feature requests are welcome:
@@ -120,7 +114,6 @@ Contributions, issues, and feature requests are welcome:
 3. Commit your changes (`git commit -m 'feat: add amazing feature'`).
 4. Push to the branch (`git push origin feature/amazing-feature`).
 5. Open a Pull Request.
-
 
 ## License
 
